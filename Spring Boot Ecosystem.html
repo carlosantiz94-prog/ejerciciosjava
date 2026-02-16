@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spring Boot - El Ecosistema Moderno</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .slide {
+            width: 960px;
+            height: 540px;
+            margin: 0 auto 20px;
+            display: flex;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* DARK THEME */
+        body.theme-dark {
+            --bg-base: #0f172a;
+            --bg-elevated: #020617;
+            --bg-surface: #1e293b;
+            --bg-muted: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-dark: #0284c7;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        body.theme-dark {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+        }
+
+        /* Layout utilities */
+        .row { display: flex; flex-direction: row; }
+        .col { display: flex; flex-direction: column; }
+        .center { justify-content: center; align-items: center; text-align: center; }
+        .space-between { justify-content: space-between; }
+        .items-center { align-items: center; }
+        .items-start { align-items: flex-start; }
+        .fill-width { flex: 1; }
+        .fill-height { flex: 1; display: flex; flex-direction: column; }
+
+        /* Spacing */
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+        .gap-8 { gap: 2rem; }
+        .gap-12 { gap: 3rem; }
+
+        .p-16 { padding: 4rem; }
+        .p-12 { padding: 3rem; }
+        .p-8 { padding: 2rem; }
+
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .mb-12 { margin-bottom: 3rem; }
+
+        .mt-4 { margin-top: 1rem; }
+        .mt-8 { margin-top: 2rem; }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        h1 { font-size: 3.75rem; }
+        h2 { font-size: 2.25rem; }
+        h3 { font-size: 1.875rem; }
+        h4 { font-size: 1.5rem; }
+
+        .text-6xl { font-size: 3.75rem; }
+        .text-5xl { font-size: 3rem; }
+        .text-4xl { font-size: 2.25rem; }
+        .text-3xl { font-size: 1.875rem; }
+        .text-2xl { font-size: 1.5rem; }
+        .text-xl { font-size: 1.25rem; }
+        .text-lg { font-size: 1.125rem; }
+        .text-base { font-size: 1rem; }
+        .text-sm { font-size: 0.875rem; }
+
+        .font-bold { font-weight: 700; }
+        .font-semibold { font-weight: 600; }
+        .font-normal { font-weight: 400; }
+
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+
+        /* Lists */
+        ul { margin-left: 2rem; }
+        ul li { list-style: disc; margin-bottom: 0.75rem; }
+        li:last-child { margin-bottom: 0; }
+
+        /* Colors */
+        .text-accent { color: var(--accent); }
+        .text-success { color: var(--success); }
+        .text-warning { color: var(--warning); }
+        .bg-accent { background-color: var(--accent-dark); }
+        .bg-surface { background-color: var(--bg-surface); }
+        .bg-elevated { background-color: var(--bg-elevated); }
+
+        /* Cards */
+        .card {
+            background-color: var(--bg-surface);
+            padding: 2rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h3 { color: var(--accent); margin-bottom: 1rem; }
+        .card p { color: var(--text-secondary); line-height: 1.6; }
+
+        /* Code style */
+        .code-block {
+            background-color: var(--bg-muted);
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            color: var(--accent);
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            background-color: var(--accent);
+            color: #0f172a;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        /* Comparison section */
+        .comparison {
+            display: flex;
+            gap: 2rem;
+            align-items: stretch;
+        }
+
+        .comparison-item {
+            flex: 1;
+            padding: 2rem;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .comparison-item.before {
+            background-color: rgba(239, 68, 68, 0.15);
+            border-left: 4px solid var(--error);
+        }
+
+        .comparison-item.after {
+            background-color: rgba(16, 185, 129, 0.15);
+            border-left: 4px solid var(--success);
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .comparison-item ul { margin-left: 1.5rem; }
+        .comparison-item ul li { font-size: 0.95rem; }
+
+        /* Annotation highlight */
+        .annotation {
+            background-color: rgba(56, 189, 248, 0.2);
+            border-left: 3px solid var(--accent);
+            padding: 0.75rem 1rem;
+            margin: 1rem 0;
+            border-radius: 2px;
+        }
+
+        .annotation strong { color: var(--accent); }
+
+        /* Progress indicator */
+        .dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--bg-muted);
+        }
+
+        .dot.active { background-color: var(--accent); }
+
+        .opacity-80 { opacity: 0.8; }
+        .opacity-70 { opacity: 0.7; }
+    </style>
+</head>
+<body class="theme-dark">
+
+    <!-- SLIDE 1: Portada -->
+    <section class="slide p-16 col center" style="background-color: #020617;">
+        <h1 class="mb-4" style="color: #38bdf8;">🚀 Spring Boot</h1>
+        <h2 class="mb-8" style="color: #cbd5e1;">El Ecosistema Moderno</h2>
+        
+        <div class="mb-12" style="color: #94a3b8; font-size: 1.25rem;">
+            <p style="margin-bottom: 0.5rem;">Menos configuración, más innovación</p>
+            <p style="opacity: 0.7;">Cómo Spring Boot simplifica la vida del desarrollador</p>
+        </div>
+
+        <div style="color: #94a3b8; font-size: 0.95rem;">
+            <p>Desarrollador Full-Stack | 2026</p>
+        </div>
+    </section>
+
+    <!-- SLIDE 2: ¿Por qué Spring Boot? -->
+    <section class="slide p-16 col" style="background-color: #0f172a; color: #f1f5f9;">
+        <h2 class="mb-8" style="color: #38bdf8;">¿Por Qué Spring Boot Cambió Todo?</h2>
+        
+        <div class="fill-height" style="display: flex; flex-direction: column; justify-content: center;">
+            <ul class="text-lg" style="color: #cbd5e1; line-height: 2;">
+                <li><strong style="color: #38bdf8;">Antes:</strong> Semanas configurando XML, dependencias, servidores</li>
+                <li><strong style="color: #38bdf8;">Ahora:</strong> Minutos listos para desarrollar con convenciones inteligentes</li>
+                <li><strong style="color: #10b981;">40% más rápido</strong> en iniciar proyectos que Java tradicional</li>
+                <li>Embedded Tomcat = <strong>no necesitas servidor externo</strong></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- SLIDE 3: Anotaciones - El Corazón -->
+    <section class="slide p-16 col" style="background-color: #0f172a; color: #f1f5f9;">
+        <h2 class="mb-6" style="color: #38bdf8;">Las Anotaciones (@) - Las "Etiquetas Mágicas"</h2>
+        
+        <div class="fill-height" style="display: flex; flex-direction: column; justify-content: center; gap: 1.5rem;">
+            <div class="annotation" style="background-color: rgba(56, 189, 248, 0.15); border-left: 3px solid #38bdf8; padding: 1rem;">
+                <p style="color: #cbd5e1;"><strong style="color: #38bdf8;">¿Qué hacen?</strong> Reemplazan cientos de líneas de configuración XML con una sola línea</p>
+            </div>
+
+            <div style="display: flex; gap: 1.5rem;">
+                <div class="card" style="flex: 1; background-color: #1e293b;">
+                    <h4 style="color: #38bdf8; margin-bottom: 0.75rem;">@RestController</h4>
+                    <p style="font-size: 0.95rem; color: #cbd5e1;">Crea automáticamente un controlador REST</p>
+                </div>
+                <div class="card" style="flex: 1; background-color: #1e293b;">
+                    <h4 style="color: #38bdf8; margin-bottom: 0.75rem;">@Autowired</h4>
+                    <p style="font-size: 0.95rem; color: #cbd5e1;">Inyecta dependencias automáticamente</p>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1.5rem;">
+                <div class="card" style="flex: 1; background-color: #1e293b;">
+                    <h4 style="color: #38bdf8; margin-bottom: 0.75rem;">@Service</h4>
+                    <p style="font-size: 0.95rem; color: #cbd5e1;">Marca la lógica de negocio</p>
+                </div>
+                <div class="card" style="flex: 1; background-color: #1e293b;">
+                    <h4 style="color: #38bdf8; margin-bottom: 0.75rem;">@Repository</h4>
+                    <p style="font-size: 0.95rem; color: #cbd5e1;">Maneja acceso a datos</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 4: Ejemplo de Código -->
+    <section class="slide p-16 col" style="background-color: #0f172a; color: #f1f5f9;">
+        <h2 class="mb-4" style="color: #38bdf8;">Anotaciones en Acción</h2>
+        
+        <div class="code-block" style="background-color: #1e293b; border-left: 4px solid #38bdf8; padding: 1.5rem; font-family: 'Courier New', monospace; font-size: 0.9rem; color: #f1f5f9; margin-top: 1rem;">
+            <span style="color: #10b981;">@RestController</span><br>
+            <span style="color: #cbd5e1;">public class ProductController {</span><br><br>
+            <span style="margin-left: 2rem; color: #f59e0b;">@Autowired</span><br>
+            <span style="margin-left: 2rem; color: #cbd5e1;">private ProductService service;</span><br><br>
+            <span style="margin-left: 2rem; color: #10b981;">@GetMapping</span>(<span style="color: #f59e0b;">"/products"</span>)<br>
+            <span style="margin-left: 2rem; color: #cbd5e1;">public List&lt;Product&gt; getAll() {</span><br>
+            <span style="margin-left: 4rem; color: #cbd5e1;">return service.getProducts();</span><br>
+            <span style="margin-left: 2rem; color: #cbd5e1;">}</span><br>
+            <span style="color: #cbd5e1;">}</span>
+        </div>
+        <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 1rem;">✨ 15 líneas. Sin XML. Sin configuración. Listo para producción.</p>
+    </section>
+
+    <!-- SLIDE 5: Convention Over Configuration -->
+    <section class="slide p-16 col" style="background-color: #0f172a; color: #f1f5f9;">
+        <h2 class="mb-6" style="color: #38bdf8;">Convention Over Configuration (CoC)</h2>
+        
+        <div class="annotation" style="background-color: rgba(56, 189, 248, 0.15); border-left: 3px solid #38bdf8; padding: 1rem; margin-bottom: 2rem;">
+            <p style="color: #cbd5e1; font-size: 1rem;"><strong style="color: #38bdf8;">El Principio:</strong> Spring Boot toma decisiones inteligentes por ti. Configura solo si necesitas algo especial.</p>
+        </div>
+
+        <div class="row gap-8" style="flex: 1;">
+            <div class="card" style="flex: 1; background-color: #1e293b;">
+                <h3 style="color: #38bdf8; margin-bottom: 1rem;">✅ Spring Boot Asume:</h3>
+                <ul style="color: #cbd5e1; font-size: 0.95rem;">
+                    <li>Tomcat en puerto 8080</li>
+                    <li>Base de datos en localhost</li>
+                    <li>application.properties</li>
+                    <li>Recursos en src/main/resources</li>
+                </ul>
+            </div>
+
+            <div class="card" style="flex: 1; background-color: #1e293b; border-left: 4px solid #10b981;">
+                <h3 style="color: #10b981; margin-bottom: 1rem;">⚡ Resultado:</h3>
+                <ul style="color: #cbd5e1; font-size: 0.95rem;">
+                    <li>Proyecto listo en <strong>minutos</strong></li>
+                    <li>Menos líneas de código</li>
+                    <li>Menos errores</li>
+                    <li>Más enfoque en lógica</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 6: Antes vs Después (Infografía) -->
+    <section class="slide p-16 col" style="background-color: #0f172a; color: #f1f5f9;">
+        <h2 class="mb-8 text-center" style="color: #38bdf8;">Antes y Después: El Impacto Real</h2>
+        
+        <div class="row gap-8" style="flex: 1; align-items: stretch;">
+            <!-- ANTES -->
+            <div class="comparison-item before" style="background-color: rgba(239, 68, 68, 0.15); border-left: 4px solid #ef4444; padding: 1.5rem;">
+                <h3 style="color: #ef4444; margin-bottom: 1rem; font-size: 1.5rem;">❌ Java Tradicional</h3>
+                <ul style="color: #cbd5e1; font-size: 0.95rem;">
+                    <li><strong>5-7 días</strong> setup inicial</li>
+                    <li>Configurar Tomcat manualmente</li>
+                    <li>500+ líneas XML</li>
+                    <li>Gestionar versiones de dependencias</li>
+                    <li>Crear estructura de proyecto</li>
+                    <li>Conectar BD a mano</li>
+                    <li>Esfuerzo: <strong>70%</strong> config</li>
+                </ul>
+            </div>
+
+            <!-- DESPUÉS -->
+            <div class="comparison-item after" style="background-color: rgba(16, 185, 129, 0.15); border-left: 4px solid #10b981; padding: 1.5rem;">
+                <h3 style="color: #10b981; margin-bottom: 1rem; font-size: 1.5rem;">✅ Spring Boot</h3>
+                <ul style="color: #cbd5e1; font-size: 0.95rem;">
+                    <li><strong>15-20 minutos</strong> primer endpoint</li>
+                    <li>Tomcat embebido automático</li>
+                    <li>0 XML (anotaciones)</li>
+                    <li>Starters manejan versiones</li>
+                    <li>Estructura generada automática</li>
+                    <li>Auto-configuración de BD</li>
+                    <li>Esfuerzo: <strong>100%</strong> lógica</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 7: Starters - El Superpoder -->
+    <section class="slide p-16 col" style="background-color: #0f172a; color: #f1f5f9;">
+        <h2 class="mb-6" style="color: #38bdf8;">Starters: Los Kits Listos</h2>
+        
+        <p style="color: #cbd5e1; margin-bottom: 2rem; font-size: 1rem;">Agreguemos una dependencia y Spring Boot configura TODO automáticamente:</p>
+
+        <div style="display: flex; gap: 1.5rem; margin-bottom: 2rem;">
+            <div class="card" style="flex: 1; background-color: #1e293b; padding: 1.5rem;">
+                <p style="color: #f59e0b; font-family: 'Courier New', monospace; font-size: 0.9rem; margin-bottom: 1rem;">spring-boot-starter-web</p>
+                <p style="color: #cbd5e1; font-size: 0.95rem;">✅ REST API lista<br>✅ Jackson (JSON)<br>✅ Validation<br>✅ Embedded Tomcat</p>
+            </div>
+            <div class="card" style="flex: 1; background-color: #1e293b; padding: 1.5rem;">
+                <p style="color: #f59e0b; font-family: 'Courier New', monospace; font-size: 0.9rem; margin-bottom: 1rem;">spring-boot-starter-data-jpa</p>
+                <p style="color: #cbd5e1; font-size: 0.95rem;">✅ ORM configurado<br>✅ Transacciones<br>✅ Pool de conexiones<br>✅ Migrations (Flyway)</p>
+            </div>
+        </div>
+
+        <div class="annotation" style="background-color: rgba(56, 189, 248, 0.15); border-left: 3px solid #38bdf8; padding: 1rem;">
+            <p style="color: #cbd5e1;"><strong style="color: #38bdf8;">Resultado:</strong> Una sola línea en pom.xml = semanas de configuración eliminadas</p>
+        </div>
+    </section>
+
+    <!-- SLIDE 8: Auto-Configuration Magic -->
+    <section class="slide p-16 col" style="background-color: #0f172a; color: #f1f5f9;">
+        <h2 class="mb-6" style="color: #38bdf8;">Auto-Configuración Inteligente</h2>
+        
+        <div class="annotation" style="background-color: rgba(56, 189, 248, 0.15); border-left: 3px solid #38bdf8; padding: 1rem; margin-bottom: 2rem;">
+            <p style="color: #cbd5e1;">Spring Boot detecta lo que necesitas en el classpath y lo configura automáticamente</p>
+        </div>
+
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <div style="display: flex; gap: 2rem; margin-bottom: 1.5rem;">
+                <div style="flex: 1; text-align: center;">
+                    <p style="color: #38bdf8; font-size: 1.2rem; margin-bottom: 0.5rem;">📦 spring-boot-starter-data-jpa</p>
+                    <p style="color: #cbd5e1; font-size: 0.9rem;">↓</p>
+                    <p style="color: #10b981; font-weight: 600;">DataSource + Transaction Manager</p>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <p style="color: #38bdf8; font-size: 1.2rem; margin-bottom: 0.5rem;">🔐 spring-security</p>
+                    <p style="color: #cbd5e1; font-size: 0.9rem;">↓</p>
+                    <p style="color: #10b981; font-weight: 600;">Authentication + Authorization</p>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 2rem;">
+                <div style="flex: 1; text-align: center;">
+                    <p style="color: #38bdf8; font-size: 1.2rem; margin-bottom: 0.5rem;">📊 Micrometer</p>
+                    <p style="color: #cbd5e1; font-size: 0.9rem;">↓</p>
+                    <p style="color: #10b981; font-weight: 600;">Metrics + Monitoring</p>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <p style="color: #38bdf8; font-size: 1.2rem; margin-bottom: 0.5rem;">🏥 Spring Boot Actuator</p>
+                    <p style="color: #cbd5e1; font-size: 0.9rem;">↓</p>
+                    <p style="color: #10b981; font-weight: 600;">Health Checks + Endpoints</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 9: Beneficios Prácticos -->
+    <section class="slide p-16 col" style="background-color: #0f172a; color: #f1f5f9;">
+        <h2 class="mb-6" style="color: #38bdf8;">Beneficios que Puedes Medir Hoy</h2>
+        
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1rem;">
+            <ul class="text-lg" style="color: #cbd5e1; line-height: 1.8;">
+                <li>⚡ <strong style="color: #10b981;">40% más rápido</strong> que Java + Spring Framework tradicional</li>
+                <li>🎯 <strong>Enfoque en lógica:</strong> 100% tiempo en features, 0% en configuración</li>
+                <li>📦 <strong>Embedded Tomcat:</strong> Deploy como JAR independiente</li>
+                <li>🔧 <strong>Menos errores:</strong> Convenciones eliminan bugs de configuración</li>
+                <li>🚀 <strong>Microservicios listos:</strong> Estructura perfecta para arquitecturas modernas</li>
+                <li>🌍 <strong>Comunidad:</strong> Millones de desarrolladores, soluciones probadas</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- SLIDE 10: Comparación de Anotaciones Importantes -->
+    <section class="slide p-16 col" style="background-color: #0f172a; color: #f1f5f9;">
+        <h2 class="mb-6" style="color: #38bdf8;">Las Anotaciones Más Poderosas</h2>
+        
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <div class="card" style="background-color: #1e293b;">
+                    <h4 style="color: #38bdf8; margin-bottom: 0.75rem;">@SpringBootApplication</h4>
+                    <p style="color: #cbd5e1; font-size: 0.9rem;">Combina 3 anotaciones en 1. Inicia tu app en una línea.</p>
+                </div>
+                <div class="card" style="background-color: #1e293b;">
+                    <h4 style="color: #38bdf8; margin-bottom: 0.75rem;">@EnableAutoConfiguration</h4>
+                    <p style="color: #cbd5e1; font-size: 0.9rem;">Activa la "magia" automática de configuración.</p>
+                </div>
+                <div class="card" style="background-color: #1e293b;">
+                    <h4 style="color: #38bdf8; margin-bottom: 0.75rem;">@Component</h4>
+                    <p style="color: #cbd5e1; font-size: 0.9rem;">Marca cualquier clase como bean de Spring.</p>
+                </div>
+                <div class="card" style="background-color: #1e293b;">
+                    <h4 style="color: #38bdf8; margin-bottom: 0.75rem;">@Qualifier</h4>
+                    <p style="color: #cbd5e1; font-size: 0.9rem;">Especifica cuál bean usar cuando hay múltiples.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 11: El Flujo Moderno -->
+    <section class="slide p-16 col" style="background-color: #0f172a; color: #f1f5f9;">
+        <h2 class="mb-8 text-center" style="color: #38bdf8;">El Flujo Moderno: De Idea a Producción</h2>
+        
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="background-color: #38bdf8; color: #0f172a; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</div>
+                <p style="color: #cbd5e1;"><strong>spring-boot-starter</strong> → Maven/Gradle genera estructura</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="background-color: #38bdf8; color: #0f172a; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</div>
+                <p style="color: #cbd5e1;"><strong>Anotaciones (@)</strong> → Define controladores y servicios</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="background-color: #38bdf8; color: #0f172a; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">3</div>
+                <p style="color: #cbd5e1;"><strong>Auto-Config</strong> → Spring Boot arregla todo automáticamente</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="background-color: #38bdf8; color: #0f172a; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">4</div>
+                <p style="color: #cbd5e1;"><strong>mvn clean package</strong> → JAR listo para deploy</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="background-color: #10b981; color: #0f172a; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">✓</div>
+                <p style="color: #10b981;"><strong>java -jar app.jar</strong> → En producción sin drama</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 12: Casos de Uso Reales -->
+    <section class="slide p-16 col" style="background-color: #0f172a; color: #f1f5f9;">
+        <h2 class="mb-6" style="color: #38bdf8;">Spring Boot Resuelve Esto Instantáneamente</h2>
+        
+        <ul class="text-lg" style="color: #cbd5e1; line-height: 1.8;">
+            <li>🌐 <strong>REST APIs:</strong> Endpoint de GET/POST en minutos, no horas</li>
+            <li>🗄️ <strong>Conectar BD:</strong> application.properties → listo</li>
+            <li>🔐 <strong>Seguridad:</strong> Una dependencia = autenticación y autorización</li>
+            <li>📊 <strong>Logging y Metrics:</strong> Actuator trae todo pre-configurado</li>
+            <li>⚙️ <strong>Propiedades dinámicas:</strong> Cambiar config sin recompilar</li>
+            <li>🚀 <strong>Microservicios:</strong> Estructura lista para servicios independientes</li>
+        </ul>
+    </section>
+
+    <!-- SLIDE 13: Slogan Final -->
+    <section class="slide p-16 col center" style="background-color: #020617;">
+        <div class="mb-12">
+            <p style="color: #94a3b8; font-size: 1.125rem; margin-bottom: 1rem;">La Filosofía de Spring Boot:</p>
+            <h1 class="text-5xl" style="color: #38bdf8; line-height: 1.3; margin-bottom: 1rem;">
+                Menos Configuración<br>Más Innovación
+            </h1>
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 3rem; margin-top: 3rem;">
+            <div style="text-align: center;">
+                <p style="color: #10b981; font-size: 2rem; margin-bottom: 0.5rem;">💡</p>
+                <p style="color: #cbd5e1;">Enfócate en lo que importa</p>
+            </div>
+            <div style="text-align: center;">
+                <p style="color: #f59e0b; font-size: 2rem; margin-bottom: 0.5rem;">⚡</p>
+                <p style="color: #cbd5e1;">Desarrolla 40% más rápido</p>
+            </div>
+            <div style="text-align: center;">
+                <p style="color: #38bdf8; font-size: 2rem; margin-bottom: 0.5rem;">🚀</p>
+                <p style="color: #cbd5e1;">Deploy sin complicaciones</p>
+            </div>
+        </div>
+
+        <p style="color: #94a3b8; margin-top: 2rem; font-size: 0.95rem;">Bienvenido al desarrollo moderno de Java</p>
+    </section>
+
+</body>
+</html>
