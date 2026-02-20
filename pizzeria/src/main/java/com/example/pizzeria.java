@@ -24,7 +24,7 @@ public class pizzeria {
                 break;
             case "familiar":
                 precioFinal += 15000;
-                break;
+                break;    
         }
 
         return precioFinal;
@@ -34,5 +34,6 @@ public class pizzeria {
         System.out.println("Pizza: " + nombre);
         System.out.println("Ingredientes: " + ingredientes);
         System.out.println("Precio base: $" + precioBase);
+
     }
 }
